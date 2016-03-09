@@ -80,25 +80,15 @@ namespace MultiDownload
 			progressBar.Value = progressBar.Maximum - ((ToDownload.Count + 1) * 100) + e.ProgressPercentage;
 		}
 
-		private void Webc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+		private void DownloadNext()
 		{
-			if(e.Error != null && !e.Cancelled)
-			{
-				System.Windows.MessageBox.Show("Error while downloading: " + e.Error.Message);
-
-				CanChange = true;
-
-				progressBar.Value = 0;
-
-				buttonDownload.Content = "Download";
-			}
-			else if (ToDownload.Any())
+			if (ToDownload.Any())
 			{
 				DownloadEntry next = ToDownload.Dequeue();
 				webc.DownloadFileAsync(new Uri(next.Url), next.Path);
 
 				progressBar.Value = progressBar.Maximum - ((ToDownload.Count + 1) * 100);
-            }
+			}
 			else
 			{
 				System.Windows.MessageBox.Show("Done");
@@ -109,6 +99,29 @@ namespace MultiDownload
 
 				buttonDownload.Content = "Download";
 			}
+		}
+
+		private void Webc_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
+		{
+			if (e.Error != null && !e.Cancelled)
+			{
+				if (Properties.Settings.Default.IgnoreErrors)
+				{
+					DownloadNext();
+				}
+				else
+				{
+					System.Windows.MessageBox.Show("Error while downloading: " + e.Error.Message);
+
+					CanChange = true;
+
+					progressBar.Value = 0;
+
+					buttonDownload.Content = "Download";
+				}
+			}
+			else
+				DownloadNext();
 		}
 
 		private IEnumerable<DownloadEntry> GetDownloadEntries()

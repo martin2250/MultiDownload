@@ -5,16 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MultiDownload"
         mc:Ignorable="d"
-        Title="MultiDownload" Height="141.2" Width="525">
-    <Canvas>
+        Title="MultiDownload" Height="164.041" Width="530">
+    <Canvas Margin="0,0,0,0">
         <Label x:Name="label" Content="URL:" Canvas.Left="10" Canvas.Top="10"/>
-		
+
         <TextBox x:Name="textBoxUrl"
-			Height="22" Canvas.Left="48" TextWrapping="Wrap" Canvas.Top="13" Width="460" VerticalContentAlignment="Center"
+			Height="22" Canvas.Left="48" TextWrapping="Wrap" Canvas.Top="13" Canvas.Right="10" VerticalContentAlignment="Center"
 			Text="http://www.test.com/files/doc{2}.txt"
 			ToolTip="use {x} to insert number, where x equals the (minimum) length which is archieved through padding"
-			IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
-		
+			IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Width="460"/>
+
         <Label x:Name="label1" Content="File Path:" Canvas.Left="10" Canvas.Top="42"/>
 
         <TextBox x:Name="textBoxFilePath"
@@ -29,9 +29,9 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
-        
-		<Label x:Name="label2" Content="Range:" Canvas.Left="10" Canvas.Top="72"/>
-		
+
+        <Label x:Name="label2" Content="Range:" Canvas.Left="10" Canvas.Top="72"/>
+
         <TextBox x:Name="textBoxRange"
 				 Height="23" Canvas.Left="61" TextWrapping="Wrap" Canvas.Top="74" Width="64" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
 				 IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
@@ -43,27 +43,28 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
-		
+
         <Button x:Name="buttonDownload" Content="Download"
 				Canvas.Left="418" Canvas.Top="74" Width="90" Height="23"
 				Click="buttonDownload_Click"
 				ToolTipOpening="buttonDownload_ToolTipOpening" ToolTip="If you read this something went wrong"/>
-		
+
         <ProgressBar x:Name="progressBar"
 			Height="23" Canvas.Left="130" Canvas.Top="74" Width="283"/>
-		
+
         <Button x:Name="buttonBrowse" Content="..."
 				Canvas.Left="343" Canvas.Top="45" Width="28" Height="22" VerticalContentAlignment="Center"
 				Click="buttonBrowse_Click"
 				IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
-		
+
         <TextBox x:Name="textBoxFileName"
 				 Height="22" Canvas.Left="386" TextWrapping="Wrap" Canvas.Top="45" Width="122" VerticalContentAlignment="Center"
 				 Text="file{2}.txt"
 				 IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
 				 ToolTip="use {x} to insert number, where x equals the (minimum) length which is archieved through padding"/>
-		
+
         <Label x:Name="label3" Content="\" Canvas.Left="371" Canvas.Top="42"/>
+        <CheckBox Content="Ignore Errors" Canvas.Left="10" Canvas.Top="103" IsChecked="{local:SettingBinding Path=IgnoreErrors}"/>
 
     </Canvas>
 </Window>
