@@ -5,22 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MultiDownload"
         mc:Ignorable="d"
-        Title="MultiDownload" Height="164.041" Width="530">
-    <Canvas Margin="0,0,0,0">
-        <Label x:Name="label" Content="URL:" Canvas.Left="10" Canvas.Top="10"/>
-
-        <TextBox x:Name="textBoxUrl"
-			Height="22" Canvas.Left="48" TextWrapping="Wrap" Canvas.Top="13" Canvas.Right="10" VerticalContentAlignment="Center"
-			Text="http://www.test.com/files/doc{2}.txt"
-			ToolTip="use {x} to insert number, where x equals the (minimum) length which is archieved through padding"
-			IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Width="460"/>
-
-        <Label x:Name="label1" Content="File Path:" Canvas.Left="10" Canvas.Top="42"/>
-
-        <TextBox x:Name="textBoxFilePath"
-				 Height="22" Canvas.Left="72" TextWrapping="Wrap" Canvas.Top="45" Width="266" VerticalContentAlignment="Center"
-				 ToolTip="Select the output folder here"
-				 IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
+        Title="MultiDownload" Width="530" Height="172">
+    <Grid Margin="0">
+        <Label x:Name="label" Content="Url:" HorizontalAlignment="Left" Margin="10,8,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBoxUrl" Height="23" Margin="42,10,10.2,0" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center" Text="http://www.test.com/files/doc{2}.txt" ToolTip="use {x} to insert number, where x equals the (minimum) length which is archieved through padding" IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
+        <Label x:Name="label1" Content="File Path:" HorizontalAlignment="Left" Margin="10,39,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBoxFilePath" HorizontalAlignment="Left" Height="23" Margin="73,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="227" VerticalContentAlignment="Center" ToolTip="Select the output folder here" IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
             <TextBox.Text>
                 <Binding Path="FilePath" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
@@ -29,12 +19,11 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
-
-        <Label x:Name="label2" Content="Range:" Canvas.Left="10" Canvas.Top="72"/>
-
-        <TextBox x:Name="textBoxRange"
-				 Height="23" Canvas.Left="61" TextWrapping="Wrap" Canvas.Top="74" Width="64" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-				 IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
+        <Button x:Name="buttonBrowse" Content="..." HorizontalAlignment="Left" Margin="305,41,0,0" VerticalAlignment="Top" Width="28" Height="23" Click="buttonBrowse_Click" IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
+        <Label x:Name="label2" Content="\" HorizontalAlignment="Left" Margin="338,39,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBoxFileName" Height="23" Margin="357,41,10.2,0" TextWrapping="Wrap" Text="file{2}.pdf" VerticalAlignment="Top" VerticalContentAlignment="Center" IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" ToolTip="use {x} to insert number, where x equals the (minimum) length which is archieved through padding"/>
+        <Label x:Name="label3" Content="Range:" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBoxRange" HorizontalAlignment="Left" Height="23" Margin="62,72,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="65" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
             <TextBox.Text>
                 <Binding Path="Range" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}" UpdateSourceTrigger="PropertyChanged">
                     <Binding.ValidationRules>
@@ -43,28 +32,17 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
+        <ProgressBar x:Name="progressBar"  Height="23" Margin="243,72,91.2,0" VerticalAlignment="Top"/>
+        <Button x:Name="buttonDownload" Content="Download" Margin="0,72,10.2,0" VerticalAlignment="Top" Height="23" HorizontalAlignment="Right" Width="76" Click="buttonDownload_Click" ToolTipOpening="buttonDownload_ToolTipOpening" ToolTip="If you read this something went wrong"/>
+        <CheckBox x:Name="checkBoxIgnoreErrors" Content="Ignore Errors" Margin="0,100,10.2,0" VerticalAlignment="Top" Height="23" VerticalContentAlignment="Center" RenderTransformOrigin="0.03,0.609" HorizontalAlignment="Right" Width="94" IsChecked="{local:SettingBinding Path=IgnoreErrors}" IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
+        <Popup StaysOpen="False" Width="300" Height="200" x:Name="MyPopup" PopupAnimation="Fade" AllowsTransparency="True" Placement="Right" PlacementTarget="{Binding ElementName=buttonEditCookies, Mode=OneWay}">
+            <Popup.Child>
+                <TextBox x:Name="textBoxCookies" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" ToolTip="Enter cookies here.\n[cookie name]=[content]\nUse a new line for every cookie"/>
+            </Popup.Child>
+        </Popup>
+        <Button x:Name="buttonEditCookies" Content="Edit Cookies" HorizontalAlignment="Left" Margin="10,102,0,0" VerticalAlignment="Top" Width="86" Height="23" Click="buttonEditCookies_Click" IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
+        <Label x:Name="label4" Content="File Offset:" HorizontalAlignment="Left" Margin="132,71,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.375,0.609"/>
+        <TextBox x:Name="textBoxFileOffset" HorizontalAlignment="Left" Height="23" Margin="203,72,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="35" VerticalContentAlignment="Center" ToolTip="Offset the file indicies" IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" Text="{Binding Path=FileOffset, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center"/>
 
-        <Button x:Name="buttonDownload" Content="Download"
-				Canvas.Left="418" Canvas.Top="74" Width="90" Height="23"
-				Click="buttonDownload_Click"
-				ToolTipOpening="buttonDownload_ToolTipOpening" ToolTip="If you read this something went wrong"/>
-
-        <ProgressBar x:Name="progressBar"
-			Height="23" Canvas.Left="130" Canvas.Top="74" Width="283"/>
-
-        <Button x:Name="buttonBrowse" Content="..."
-				Canvas.Left="343" Canvas.Top="45" Width="28" Height="22" VerticalContentAlignment="Center"
-				Click="buttonBrowse_Click"
-				IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"/>
-
-        <TextBox x:Name="textBoxFileName"
-				 Height="22" Canvas.Left="386" TextWrapping="Wrap" Canvas.Top="45" Width="122" VerticalContentAlignment="Center"
-				 Text="file{2}.txt"
-				 IsEnabled="{Binding Path=CanChange, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
-				 ToolTip="use {x} to insert number, where x equals the (minimum) length which is archieved through padding"/>
-
-        <Label x:Name="label3" Content="\" Canvas.Left="371" Canvas.Top="42"/>
-        <CheckBox Content="Ignore Errors" Canvas.Left="10" Canvas.Top="103" IsChecked="{local:SettingBinding Path=IgnoreErrors}"/>
-
-    </Canvas>
+    </Grid>
 </Window>

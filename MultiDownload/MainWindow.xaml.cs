@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Net;
 using System.ComponentModel;
+using System.Windows.Controls.Primitives;
 
 namespace MultiDownload
 {
@@ -64,6 +65,8 @@ namespace MultiDownload
 					throw new ApplicationException("Invalid Path");
 			}
 		}
+
+		public int FileOffset { get; set; } = 0;
 
 		bool _canChange = true;
 		public bool CanChange { get { return _canChange; } set { _canChange = value; OnPropertyChanged("CanChange"); } }
@@ -135,7 +138,7 @@ namespace MultiDownload
 			{
 				yield return new DownloadEntry(
 					urlIns.Replace(textBoxUrl.Text, (m)=> { return i.ToString($"D{int.Parse(m.Groups[1].Value)}"); }),
-					urlIns.Replace(path + textBoxFileName.Text, (m) => { return i.ToString($"D{int.Parse(m.Groups[1].Value)}"); }));
+					urlIns.Replace(path + textBoxFileName.Text, (m) => { return (i + FileOffset).ToString($"D{int.Parse(m.Groups[1].Value)}"); }));
 			}
 		}
 
@@ -145,8 +148,19 @@ namespace MultiDownload
 		{
 			if (CanChange)
 			{
+				try
+				{
+					webc.Headers.Set(HttpRequestHeader.Cookie, textBoxCookies.Text.Trim().Replace("\n", ";").Replace("\r", ""));
+				}
+				catch (Exception ex)
+				{
+					System.Windows.MessageBox.Show($"Could not use cookie: {ex.Message}");
+					return;
+				}
+
 				CanChange = false;
 
+				ToDownload.Clear();
 				foreach(var entry in GetDownloadEntries())
 					ToDownload.Enqueue(entry);
 
@@ -178,6 +192,11 @@ namespace MultiDownload
 
 			if (examples.Count > 5)
 				buttonDownload.ToolTip += $"\n... {examples.Count - 5} lines hidden";
+		}
+
+		private void buttonEditCookies_Click(object sender, RoutedEventArgs e)
+		{
+			MyPopup.IsOpen = true;
 		}
 
 		private void buttonBrowse_Click(object sender, RoutedEventArgs e)
